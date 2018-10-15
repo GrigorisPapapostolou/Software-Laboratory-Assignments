@@ -1,0 +1,41 @@
+# -----------------------------------
+# Program x86asm.s
+# Compute and print the sum 0+...+N
+# -----------------------------------
+
+	.section .data	
+N:	.long 1000	     
+S:	.long 0		     
+Msg:	.ascii "The sum from 0 to %d is %d\n\0"
+
+
+	.section .text	
+
+.globl main
+.globl L1
+.globl L2
+main:	
+	pushq %rbp	# [ Stack (rsp)  <-- (%rbp) ]  && [ rsp = -- ] 
+	movq %rsp, %rbp	#  (%rbp) <-- (%rsp) 
+        movl N, %ebx	#  %ebx < -- 1000
+ 	                      
+L1:                     # BREAKPOINT     
+	addl %ebx, S	#  S < -- S + (%ebx)                         ...S= 1000 + 999 + ... + 2 + 1 
+	decl %ebx       #  (%ebx) <-- (%ebx) - 1 
+	cmpl $0, %ebx   #   tmp= %ebx - 0  ..      if( tmp <= 0 )
+	jng  L2	    	#                             jump L2  
+                        #                          else
+        jmp L1   	#                             jump L1 
+
+L2:                     #BREAKPOINT
+	# print result
+	mov S,%rdx 	    	#  arg1 : Stack(rsp) <-- S && (rsp--)
+	mov N,%rsi	        #  arg2 : Stack(rsp) <-- N && (rsp--)
+	mov $Msg,%rdi    	#  arg3 : Stack(rsp) <-- String && (rsp--)
+	call printf 	# 
+        movl $0, %eax  	# 
+        leave	    	#
+ 	ret             #
+
+
+

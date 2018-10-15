@@ -1,0 +1,111 @@
+Ονομ.: ΓΡΗΓΟΡΗΣ ΠΑΠΑΠΟΣΤΟΛΟΥ
+Τμημα: ΤΕΜ 
+Α.Μ.: 1667
+Εξάμηνο: 8ο
+
+Σχόλια : 
+ Αντικατεστησα τον εξης κωδικα:
+         movl $L1, %eax           με      jmp L1
+         jmp *(%eax)
+
+λογο Segmentation fault.
+
+Ερώτημα 1:
+a) The sum from 0 to 1000 is 500500
+b) 
+	.section .data	                        # Στο τμήμα .data δήλωνουμέ όλες τις global μεταβλητές  
+N:	.long 1000	                        #  int Ν = 1000
+S:	.long 0		                        #  int S = 0
+Msg:	.ascii "The sum from 0 to %d is %d\n\0" #  strint Msg = "The sum from 0 to %d is %d\n"
+
+
+	.section .text	#                       # Στο τμήμα .text γράφουμε τον κωδικά
+
+.globl main
+.globl L1
+.globl L2
+main:	
+	pushq %rbp	                         # [ Stack (rsp)  <-- (%rbp) ]  &&  [rsp-- ]  
+	movq %rsp, %rbp                        	 #  (%rbp) <-- (%rsp) 
+
+ 	# initialize
+         movl N, %ebx	                         #  %ebx < -- 1000
+
+ 	                      
+L1:                         
+	addl %ebx, S	                         #  S <-- S + (%ebx)                          
+	decl %ebx                                #  (%ebx) <-- (%ebx) - 1 
+	cmpl $0, %ebx                            #  tmp= %ebx - 0  ..      if( tmp <= 0 )
+	jng  L2	    	                         #                             jump L2  
+                                                 #                          else
+        jmp L1   	                         #                             jump L1 
+
+L2:                    
+	# print result
+	mov S,%rdx 	         	        #  arg1 : %rdx <-- S
+	mov N,%rsi	                        #  arg2 : %rsi <-- N 
+	mov $Msg,%rdi                   	#  arg3 : %rdi <-- Msg 
+	call printf 	                        #  call printf from libc 
+        movl $0, %eax  	                        #  return 0 
+        leave	    	
+ 	ret   
+
+d) Ο αριθμός των εντολών στην main ειναι 3.
+   Ο αριθμός bytes που καταλαμβάνουν οι εντολές της main ειναι 7.
+  
+   b *main+4
+
+e) (gdb) p (int )S              ==> $1 = 0     
+   (gdb) p (int *)&S            ==> $2 = (int *) 0x601044
+   (gdb) p (char *)&Msg         ==> $3 = 0x601048 "The sum from 0 to %d is %d\n"
+
+   The sum from 0 to 1000 is 500599.
+
+Ερώτημα 2:
+
+a) The sum from 0 to 1000 is 500500
+b) Αποτελείται απο 20 εντολές.
+c) x/20i *main
+d) x/78b *main (αλλιως 80 με 0χ00)
+   b 12
+
+e)   (gdb) p Sum               ==>   $1 = 0
+     (gdb) p &Sum              ==>   $2 = (int *) 0x601048
+     (gdb) p n                 ==>   $3 = 1000
+     (gdb) p &n                ==>   $4 = (int *) 0x601040
+
+     set Sum =98 : The sum from 0 to 1000 is 500598
+     set *(int *)&Sum = 99 : The sum from 0 to 1000 is 500599
+
+f)  x/20i *main
+    x/2i 0x40048d
+    x/3b 0x40048d
+    set *(char *)(0x40048d+1) = 100
+    x/2i 0x40048d
+
+ ή  set var n = 100               
+
+   The sum from 0 to 1000 is 5050.    
+
+Ερώτημα 3:
+a) The sum from 0 to 1000 is 500500
+
+b) x/8i *main
+   0x400536 <main>:	push   %rbp
+   0x400537 <main+1>:	mov    %rsp,%rbp
+   0x40053a <main+4>:	mov    0x601040,%ebx
+   0x400541 <main+11>:	add    %ebx,0x601048
+   0x400548 <main+18>:	dec    %ebx
+   0x40054a <main+20>:	cmp    $0x0,%ebx
+   0x40054d <main+23>:	jle    0x400551 <L2>
+   0x40054f <main+25>:	jmp    0x400541 <main+11>
+
+c) Κανοντας τις εξης αλλαγες (σε ΟΛΟ τον κωδικα): 
+    n ---> i
+    Sum ---> S 
+   
+   παιρνουμε : The sum from 0 to 1000 is 500500
+
+
+ 
+          

@@ -1,0 +1,44 @@
+# -----------------------------------
+# Program x86asm.s
+# Compute and print the sum 0+...+N
+# -----------------------------------
+
+	.section .data	# 
+N:	.long 1000	    # 
+S:	.long 0		    # 
+Msg:	.ascii "The sum from 0 to %d is %d\n\0"
+
+
+	.section .text	# 
+.globl main
+main:	
+	pushq	%rbp	# 
+	movq %rsp, %rbp	# 
+
+ 	# initialize
+    movq N, %rbx	# 
+
+ 	# compute sum
+L1:
+	addq %rbx, S	# 
+	decq %rbx       # 
+	cmpq $0, %rbx   # 
+	jng  L2	    	# 
+    movq $L1, %rax	# 
+    jmp *(%rax)   	# 
+
+L2:
+	# print result
+	pushq S	    	# 
+	pushq N	        # 
+	pushq $Msg  	# 
+	call printf 	# 
+	popq %rax   	# 
+	popq %rax   	# 
+	popq %rax   	# 
+
+	# exit
+	movl $0, %rax  	# 
+    leave	    	#
+ 	ret             #
+

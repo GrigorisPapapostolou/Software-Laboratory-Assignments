@@ -1,0 +1,81 @@
+Ονομ.: ΓΡΗΓΟΡΗΣ ΠΑΠΑΠΟΣΤΟΛΟΥ
+Τμημα: ΤΕΜ 
+Α.Μ.: 1667
+Εξάμηνο: 8ο
+
+
+Ερώτημα 1:
+a) The sum from 0 to 1000 is 500500
+b) 
+	.section .data	                        # Στο τμήμα .data δήλωνουμέ όλες τις global μεταβλητές  
+N:	.long 1000	                        #  int Ν = 1000
+S:	.long 0		                        #  int S = 0
+Msg:	.ascii "The sum from 0 to %d is %d\n\0" #  strint Msg = "The sum from 0 to %d is %d\n"
+
+
+	.section .text	#                       # Στο τμήμα .text γράφουμε τον κωδικά
+
+.globl main
+.globl L1
+.globl L2
+main:	
+	pushq %rbp	                         # [ Stack (rsp)  <-- (%rbp) ]  &&  [rsp-- ]  
+	movq %rsp, %rbp                        	 #  (%rbp) <-- (%rsp) 
+
+ 	# initialize
+         movl N, %ebx	                         #  %ebx < -- 1000
+
+ 	                      
+L1:                         
+	addl %ebx, S	                         #  S <-- S + (%ebx)                          
+	decl %ebx                                #  (%ebx) <-- (%ebx) - 1 
+	cmpl $0, %ebx                            #  tmp= %ebx - 0  ..      if( tmp <= 0 )
+	jng  L2	    	                         #                             jump L2  
+                                                 #                          else
+        jmp L1   	                         #                             jump L1 
+
+L2:                    
+	# print result
+	mov S,%rdx 	         	        #  arg1 : %rdx <-- S
+	mov N,%rsi	                        #  arg2 : %rsi <-- N 
+	mov $Msg,%rdi                   	#  arg3 : %rdi <-- Msg 
+	call printf 	                        #  call printf from libc 
+        movl $0, %eax  	                        #  return 0 
+        leave	    	
+ 	ret   
+
+d) Ο αριθμός των εντολών στην main ειναι 3.
+   Ο αριθμός bytes που καταλαμβάνουν οι εντολές της main ειναι 7.
+  
+   b *main+4
+
+e) (gdb) p (int )S              ==> $1 = 0     
+   (gdb) p (int *)&S            ==> $2 = (int *) 0x601044
+   (gdb) p (char *)&Msg         ==> $3 = 0x601048 "The sum from 0 to %d is %d\n"
+
+   The sum from 0 to 1000 is 500599.
+
+Ερώτημα 2:
+
+a) The sum from 0 to 1000 is 500500
+b) Αποτελείται απο 20 εντολές.
+c) x/20i *main
+d) x/78b *main (αλλιως 80 με 0χ00)
+   b 12
+
+e)   (gdb) p Sum               ==>   $1 = 0
+     (gdb) p &Sum              ==>   $2 = (int *) 0x601048
+     (gdb) p n                 ==>   $3 = 1000
+     (gdb) p &n                ==>   $4 = (int *) 0x601040
+
+     set Sum =98 : The sum from 0 to 1000 is 500598
+     set *(int *)&Sum = 99 : The sum from 0 to 1000 is 500599
+
+
+
+
+
+
+
+
+          

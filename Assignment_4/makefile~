@@ -1,0 +1,6 @@
+CC=gcc
+CCFLAGS = -g -ansi -Wall -pedantic
+
+all: test
+test: test.s
+	$(CC) $(CCFLAGS) $^ -o $@

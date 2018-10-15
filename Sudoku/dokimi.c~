@@ -1,0 +1,14 @@
+#include<stdio.h>
+#include<string.h>
+int main(void){
+int array[9][10]={{0}};
+memset(array, 1, sizeof(int) * 9 * 10);
+int i,j;
+
+for(i=0;i<9;i++)
+  for(j=0;j<10;j++)
+   printf("array[%d][%d]=%d\n",i,j,array[i][j]);
+
+return 0;
+}
+

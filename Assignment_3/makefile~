@@ -1,0 +1,20 @@
+CC=gcc
+FLAGS= -Wall -ansi -pedantic -c
+CFLAGS=-I.
+DEPS=symtable.h
+
+
+%.o:%.c $(DEPS)
+	$(CC) $(FLAGS) -o $@ $< $(CFLAGS)
+
+all: testlist testhash
+
+testlist: symtablelist.o testsymtable.o
+	$(CC) -o $@ $^ $(CFLAGS)
+
+testhash: symtablehash.o testsymtable.o
+	$(CC) -o $@ $^ $(CFLAGS)
+
+clean:
+	rm *o testlist testhash
+
